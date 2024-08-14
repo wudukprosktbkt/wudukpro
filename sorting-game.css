@@ -1,0 +1,197 @@
+@font-face {
+    font-family: 'PestaRakyat';
+    src: url('fonts/PestaRakyat.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pixellari';
+    src: url('fonts/Pixellari.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+h1 {
+    font-family: 'PestaRakyat', sans-serif;
+    font-size: 3em;
+    color: #fff;
+    margin-bottom: 10px; /* Space below the heading */
+    text-align: center;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'PestaRakyat', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url('img/cloud.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; /* Gap between the main content and buttons */
+}
+
+.main-content {
+    display: flex;
+    gap: 20px; /* Gap between drag and drop areas */
+}
+
+.drag {
+    display: grid;
+    grid-template-columns: repeat(4, 100px); /* Set up a 4x4 grid */
+    gap: 10px;
+    width: 420px; /* Adjusted for 4x4 layout */
+}
+
+.drag .dragBox,
+.dropBox {
+    width: 100px;
+    height: 100px;
+    background: #0003;
+}
+
+.images {
+    width: 100%;
+    height: 100%;
+    background: var(--img);
+    background-size: cover;
+}
+
+.buttons-container {
+    display: flex;
+    gap: 10px; /* Space between buttons */
+}
+
+button {
+    font-family: 'PestaRakyat', sans-serif; /* Apply Pixellari to buttons */
+    padding: 15px 25px;
+    border: none;
+    background: #fff;
+    color: #222;
+    font-size: 1em;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Adjusted for 4x4 layout */
+    gap: 10px;
+    width: 420px; /* Adjusted for 4x4 layout */
+}
+
+.dropBox {
+    position: relative;
+    background: #0003; /* Ensure this matches your existing design */
+}
+
+.box-number {
+    font-family: 'PestaRakyat', sans-serif; /* Apply Pixellari to box-number */
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Ensure that the dragged images retain their size and are visible during drag */
+.drag .images {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    transition: transform 0.2s ease; /* Optional: Smooth transition effect */
+}
+
+/* Ensure the dragged image maintains its size and is visible */
+.drag .images.dragging {
+    position: absolute; /* Make sure it's positioned absolutely */
+    z-index: 1000; /* Make sure it is above other content */
+    width: 100px; /* Set the size according to your layout */
+    height: 100px; /* Set the size according to your layout */
+    background-size: cover;
+    pointer-events: none; /* Ensure drag does not interfere with touch events */
+}
+
+/* Optional: to avoid scaling when resizing */
+.drag .images img {
+    width: 100%;
+    height: 100%;
+}
+
+/* Center the last box when there's only one on the last row */
+.board .dropBox:nth-last-child(-n+4):nth-child(n+13) {
+    grid-column: span 4;
+    justify-self: center;
+}
+
+.drag .dragBox:nth-last-child(-n+1) {
+    grid-column: 2 / span 2; /* Center the last box */
+    justify-self: center;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 600px) {
+    .main-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .drag {
+        width: 100%;
+        justify-content: center;
+        display: grid;
+        grid-template-columns: repeat(4, 90px); /* Increase box size */
+        grid-gap: 10px; /* Adjust space between grid items */
+    }
+
+    .drag .dragBox,
+    .dropBox {
+        width: 90px; /* Adjusted box size */
+        height: 90px;
+    }
+
+    .board {
+        width: 100%;
+        justify-content: center;
+        display: grid;
+        grid-template-columns: repeat(4, 90px); /* Adjust grid for drop areas */
+        grid-gap: 10px;
+    }
+
+    /* Remove stacking margin adjustments */
+    .dragBox {
+        margin-bottom: 0;
+    }
+
+    .dropBox {
+        margin-top: 0;
+    }
+
+    button {
+        padding: 10px 15px; /* Adjust padding for better mobile display */
+        font-size: 0.9em;  /* Adjust font size */
+        min-width: 90px;   /* Ensure the button width is smaller but visible */
+    }
+}

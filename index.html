@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="sorting-game.css">
+    <style>
+        .show-solution {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-dark text-white">
+    <div class="container mt-5">
+        <h1>Wudhu Sequence Game</h1>
+        <div class="main-content">
+            <div class="drag" id="drag">
+                <!-- Drag elements -->
+                <div class="dragBox">
+                    <div class="images" draggable="true" id="block1" style="--img:url(img/step1.jpg);" ondragstart="drag(event)"></div>
+                </div>
+                <div class="dragBox">
+                    <div class="images" draggable="true" id="block2" style="--img:url(img/step2.jpg);" ondragstart="drag(event)"></div>
+                </div>
+                <div class="dragBox">
+                    <div class="images" draggable="true" id="block3" style="--img:url(img/step3.jpg);" ondragstart="drag(event)"></div>
+                </div>
+                <div class="dragBox">
+                    <div class="images" draggable="true" id="block4" style="--img:url(img/step4.jpg);" ondragstart="drag(event)"></div>
+                </div>
+                <div class="dragBox">
+                    <div class="images" draggable="true" id="block5" style="--img:url(img/step5.jpg);" ondragstart="drag(event)"></div>
+                </div>
+                <div class="dragBox">
+                    <div class="images" draggable="true" id="block6" style="--img:url(img/step6.jpg);" ondragstart="drag(event)"></div>
+                </div>
+                <div class="dragBox">
+                    <div class="images" draggable="true" id="block7" style="--img:url(img/step7.jpg);" ondragstart="drag(event)"></div>
+                </div>
+                <div class="dragBox">
+                    <div class="images" draggable="true" id="block8" style="--img:url(img/step8.jpg);" ondragstart="drag(event)"></div>
+                </div>
+                <div class="dragBox">
+                    <div class="images" draggable="true" id="block9" style="--img:url(img/step9.jpg);" ondragstart="drag(event)"></div>
+                </div>
+                <div class="dragBox">
+                    <div class="images" draggable="true" id="block10" style="--img:url(img/step10.jpg);" ondragstart="drag(event)"></div>
+                </div>
+                <div class="dragBox">
+                    <div class="images" draggable="true" id="block11" style="--img:url(img/step11.jpg);" ondragstart="drag(event)"></div>
+                </div>
+                <div class="dragBox">
+                    <div class="images" draggable="true" id="block12" style="--img:url(img/step12.jpg);" ondragstart="drag(event)"></div>
+                </div>
+                <div class="dragBox">
+                    <div class="images" draggable="true" id="block13" style="--img:url(img/step13.jpg);" ondragstart="drag(event)"></div>
+                </div>
+            </div>
+
+            <div class="board">
+                <!-- Drop zones with original labels -->
+                <div class="dropBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <span class="box-number">1</span>
+                </div>
+                <div class="dropBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <span class="box-number">2</span>
+                </div>
+                <div class="dropBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <span class="box-number">3</span>
+                </div>
+                <div class="dropBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <span class="box-number">4</span>
+                </div>
+                <div class="dropBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <span class="box-number">5</span>
+                </div>
+                <div class="dropBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <span class="box-number">6</span>
+                </div>
+                <div class="dropBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <span class="box-number">7</span>
+                </div>
+                <div class="dropBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <span class="box-number">8</span>
+                </div>
+                <div class="dropBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <span class="box-number">9</span>
+                </div>
+                <div class="dropBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <span class="box-number">10</span>
+                </div>
+                <div class="dropBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <span class="box-number">11</span>
+                </div>
+                <div class="dropBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <span class="box-number">12</span>
+                </div>
+                <div class="dropBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <span class="box-number">13</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons-container mt-3">
+            <button class="btn btn-primary" onClick="window.location.reload();">Reset Puzzle</button>
+            <button class="btn btn-success" onClick="checkAnswer()">Check Answer</button>
+            <button class="btn btn-info show-solution" onClick="showSolution()">Show Solution</button>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    let answerChecked = false;
+    
+    window.onload = function() {
+    let parent = document.getElementById('drag');
+    let frag = document.createDocumentFragment();
+    while (parent.children.length) {
+        frag.appendChild(parent.children[Math.floor(Math.random() * parent.children.length)]);
+    }
+    parent.appendChild(frag);
+};
+
+// Handling drag events
+function drag(event) {
+    event.dataTransfer.setData("text", event.target.id);
+}
+
+// Allow drop
+function allowDrop(event) {
+    event.preventDefault();
+}
+
+// Handling drop events
+function drop(event) {
+    event.preventDefault();
+    let data = event.dataTransfer.getData("text");
+    let dropTarget = event.target;
+    while (dropTarget && !dropTarget.classList.contains('dropBox')) {
+        dropTarget = dropTarget.parentNode;
+    }
+    if (dropTarget && dropTarget.classList.contains('dropBox')) {
+        dropTarget.innerHTML = ''; // Clear the current content
+        dropTarget.appendChild(document.getElementById(data));
+    }
+}
+
+// Checking the answer
+function checkAnswer() {
+    const dropBoxes = document.querySelectorAll('.dropBox');
+    const correctSolution = ["block1", "block2", "block3", "block4", "block5", "block6", "block7", "block8", "block9", "block10", "block11", "block12", "block13"];
+
+    let isCorrect = true;
+
+    dropBoxes.forEach((box, index) => {
+        const child = box.firstChild;
+        if (child) {
+            if (child.id !== correctSolution[index]) {
+                isCorrect = false;
+            }
+        } else {
+            isCorrect = false;
+        }
+    });
+
+    if (isCorrect) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Congratulations!',
+            text: 'The puzzle is solved correctly.',
+            confirmButtonText: 'Awesome!'
+        });
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'The puzzle is not in the correct order. Please try again.',
+            confirmButtonText: 'Try Again'
+        });
+    }
+
+    document.querySelector('.show-solution').style.display = 'inline-block';
+}
+
+// Showing the solution
+function showSolution() {
+    const dropBoxes = document.querySelectorAll('.dropBox');
+    const correctSolution = ["block1", "block2", "block3", "block4", "block5", "block6", "block7", "block8", "block9", "block10", "block11", "block12", "block13"];
+
+    dropBoxes.forEach((box, index) => {
+        box.innerHTML = '';
+        if (correctSolution[index]) {
+            const img = document.createElement('div');
+            img.className = 'images';
+            img.draggable = true;
+            img.id = correctSolution[index];
+            img.style.backgroundImage = `url(img/step${index + 1}.jpg)`; // Changed to .jpg
+            img.ondragstart = (event) => drag(event);
+            box.appendChild(img);
+        }
+    });
+}
+
+
+// Handling touch events
+function handleTouchStart(e) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const element = document.querySelector(`.images[id="${e.target.id}"]`);
+    if (element) {
+        element.classList.add('dragging');
+        element.style.position = 'absolute'; // Ensure position is absolute for dragging
+        element.style.left = `${touch.pageX - element.offsetWidth / 2}px`;
+        element.style.top = `${touch.pageY - element.offsetHeight / 2}px`;
+    }
+}
+
+function handleTouchMove(e) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const element = document.querySelector(`.images[id="${e.target.id}"]`);
+    if (element) {
+        // Move the element based on touch position
+        element.style.left = `${touch.pageX - element.offsetWidth / 2}px`; // Centering the element
+        element.style.top = `${touch.pageY - element.offsetHeight / 2}px`; // Centering the element
+    }
+}
+
+function handleTouchEnd(e) {
+    e.preventDefault();
+    const touch = e.changedTouches[0];
+    const element = document.querySelector(`.images[id="${e.target.id}"]`);
+    if (element) {
+        element.classList.remove('dragging'); // Remove dragging class
+        element.style.position = 'static'; // Reset position
+        element.style.left = ''; // Reset left style
+        element.style.top = ''; // Reset top style
+        const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+        while (dropTarget && !dropTarget.classList.contains('dropBox')) {
+            dropTarget = dropTarget.parentNode;
+        }
+        if (dropTarget && dropTarget.classList.contains('dropBox')) {
+            dropTarget.innerHTML = ''; // Clear current content
+            dropTarget.appendChild(element);
+        }
+    }
+}
+
+// Adding touch event listeners
+document.querySelectorAll('.images').forEach(element => {
+    element.addEventListener('touchstart', handleTouchStart);
+    element.addEventListener('touchmove', handleTouchMove);
+    element.addEventListener('touchend', handleTouchEnd);
+});
+    </script>
+</body>
+</html>
