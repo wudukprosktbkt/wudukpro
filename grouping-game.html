@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorization Game</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        @font-face {
+            font-family: 'PestaRakyat';
+            src: url('fonts/PestaRakyat.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body {
+            font-family: 'PestaRakyat', sans-serif;
+            background: url('img/sky.png') no-repeat center center fixed;
+            padding: 10px;
+        }
+        .category {
+            border: 4px dashed #000000;
+            min-height: 120px; /* Adjusted for smaller screens */
+            margin: 5px;
+            padding: 5px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+        .draggable {
+            width: 80px; /* Adjusted for smaller screens */
+            height: 80px; /* Adjusted for smaller screens */
+            margin: 3px;
+            border: 1px solid #ccc;
+            background-size: cover;
+            cursor: move;
+            position: relative; /* Ensure draggable items are positioned correctly */
+        }
+        .draggable-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .dragging {
+            opacity: 0.5; /* Visual feedback while dragging */
+        }
+        .btn-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Space between buttons */
+    flex-wrap: wrap;
+}
+        .btn-container .btn {
+            font-size: 14px; /* Adjusted for smaller screens */
+            padding: 8px 16px; /* Adjusted for smaller screens */
+        }
+        @media (max-width: 768px) {
+            .draggable {
+                width: 60px;
+                height: 60px;
+            }
+            .btn-container {
+                flex-direction: row; /* Ensure buttons are arranged horizontally */
+            }
+    
+            .btn-container button {
+                flex: 1 1 auto; /* Allow buttons to grow and shrink as needed */
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <br><br>
+    <div class="container">
+        <h1 class="text-center">Rukun VS Sunat</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Rukun</h3>
+                <div id="rukun" class="category" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Sunat</h3>
+                <div id="sunat" class="category" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </div>
+        </div>
+        <div class="btn-container mt-4">
+            <button class="btn btn-danger" onclick="resetGame()">Ulang Semula</button>
+            <button class="btn btn-success" onclick="checkAnswers()">Semak Jawapan</button>
+            <button id="show-solution" class="btn btn-secondary" onclick="showSolution()" style="display: none;">Panduan Jawapan</button>
+            <button class="btn btn-info" onclick="goToMainMenu()">Kembali ke Laman Utama</button>
+        </div>
+    </div>    
+
+    <!-- Draggable items -->
+    <div id="draggable-items" class="container mt-4 draggable-container">
+        <div id="step1" class="draggable" draggable="true" ondragstart="drag(event)" style="background-image: url('img/step1.jpg');"></div>
+        <div id="step2" class="draggable" draggable="true" ondragstart="drag(event)" style="background-image: url('img/step2.jpg');"></div>
+        <div id="step3" class="draggable" draggable="true" ondragstart="drag(event)" style="background-image: url('img/step3.jpg');"></div>
+        <div id="step4" class="draggable" draggable="true" ondragstart="drag(event)" style="background-image: url('img/step4.jpg');"></div>
+        <div id="step5" class="draggable" draggable="true" ondragstart="drag(event)" style="background-image: url('img/step5.jpg');"></div>
+        <div id="step6" class="draggable" draggable="true" ondragstart="drag(event)" style="background-image: url('img/step6.jpg');"></div>
+        <div id="step7" class="draggable" draggable="true" ondragstart="drag(event)" style="background-image: url('img/step7.jpg');"></div>
+        <div id="step8" class="draggable" draggable="true" ondragstart="drag(event)" style="background-image: url('img/step8.jpg');"></div>
+        <div id="step9" class="draggable" draggable="true" ondragstart="drag(event)" style="background-image: url('img/step9.jpg');"></div>
+        <div id="step10" class="draggable" draggable="true" ondragstart="drag(event)" style="background-image: url('img/step10.jpg');"></div>
+        <div id="step11" class="draggable" draggable="true" ondragstart="drag(event)" style="background-image: url('img/step11.jpg');"></div>
+        <div id="step12" class="draggable" draggable="true" ondragstart="drag(event)" style="background-image: url('img/step12.jpg');"></div>
+        <div id="step13" class="draggable" draggable="true" ondragstart="drag(event)" style="background-image: url('img/step13.jpg');"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drag(event) {
+            event.dataTransfer.setData("text", event.target.id);
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const data = event.dataTransfer.getData("text");
+            const draggedElement = document.getElementById(data);
+            if (event.target.classList.contains('category')) {
+                event.target.appendChild(draggedElement);
+            }
+        }
+
+        function handleTouchStart(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const element = document.querySelector(`.draggable[id="${e.target.id}"]`);
+            if (element) {
+                element.classList.add('dragging');
+                element.style.position = 'absolute'; // Ensure position is absolute for dragging
+                element.style.left = `${touch.pageX - element.offsetWidth / 2}px`;
+                element.style.top = `${touch.pageY - element.offsetHeight / 2}px`;
+            }
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const element = document.querySelector(`.draggable[id="${e.target.id}"]`);
+            if (element) {
+                element.style.left = `${touch.pageX - element.offsetWidth / 2}px`; // Centering the element
+                element.style.top = `${touch.pageY - element.offsetHeight / 2}px`; // Centering the element
+            }
+        }
+
+        function handleTouchEnd(e) {
+            e.preventDefault();
+            const touch = e.changedTouches[0];
+            const element = document.querySelector(`.draggable[id="${e.target.id}"]`);
+            if (element) {
+                element.classList.remove('dragging'); // Remove dragging class
+                element.style.position = 'relative'; // Reset position
+                element.style.left = ''; // Reset left style
+                element.style.top = ''; // Reset top style
+                const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+                while (dropTarget && !dropTarget.classList.contains('category')) {
+                    dropTarget = dropTarget.parentNode;
+                }
+                if (dropTarget && dropTarget.classList.contains('category')) {
+                    dropTarget.appendChild(element);
+                }
+            }
+        }
+
+        function checkAnswers() {
+            const rukunSteps = ['step6', 'step7', 'step8', 'step9', 'step11', 'step12'];
+            const sunatSteps = ['step1', 'step2', 'step3', 'step4', 'step5', 'step10', 'step13'];
+
+            const rukunItems = Array.from(document.querySelectorAll('#rukun .draggable')).map(el => el.id);
+            const sunatItems = Array.from(document.querySelectorAll('#sunat .draggable')).map(el => el.id);
+
+            const rukunCorrect = rukunItems.length === rukunSteps.length && rukunItems.every(id => rukunSteps.includes(id));
+            const sunatCorrect = sunatItems.length === sunatSteps.length && sunatItems.every(id => sunatSteps.includes(id));
+
+            Swal.fire({
+                title: 'Keputusan',
+                text: (rukunCorrect && sunatCorrect) ? 'Semua jawapan adalah betul!' : 'Jawapan anda kurang tepat!',
+                icon: (rukunCorrect && sunatCorrect) ? 'success' : 'error',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                // Show the "Show Solution" button after checking answers
+                document.getElementById('show-solution').style.display = 'block';
+            });
+        }
+
+        function showSolution() {
+            const rukunSteps = ['step6', 'step7', 'step8', 'step9', 'step11', 'step12'];
+            const sunatSteps = ['step1', 'step2', 'step3', 'step4', 'step5', 'step10', 'step13'];
+
+            // Move items to the correct categories
+            rukunSteps.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    document.getElementById('rukun').appendChild(element);
+                }
+            });
+
+            sunatSteps.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    document.getElementById('sunat').appendChild(element);
+                }
+            });
+
+            Swal.fire({
+                title: 'Jawapan',
+                text: 'Jawapan yang betul adalah seperti yang dipaparkan',
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        function resetGame() {
+            const items = Array.from(document.querySelectorAll('.draggable'));
+            const container = document.getElementById('draggable-items');
+            
+            // Append items back to the draggable-items container
+            items.forEach(item => {
+                container.appendChild(item);
+            });
+            
+            // Shuffle the items
+            items.sort(() => Math.random() - 0.5).forEach(item => container.appendChild(item));
+
+            Swal.fire({
+                title: 'Ulang Semula',
+                text: 'Anda perlu menjawab semula dari awal',
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
+
+            // Hide the "Show Solution" button
+            document.getElementById('show-solution').style.display = 'none';
+        }
+
+        function goToMainMenu() {
+            Swal.fire({
+                title: 'Laman Utama',
+                text: 'Kembali ke Laman Utama...',
+                icon: 'info',
+                timer: 2000,
+                showConfirmButton: false
+            }).then(() => {
+                window.location.href = 'index.html'; // Change this to your main menu URL
+            });
+        }
+
+        // Shuffle items on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const items = Array.from(document.querySelectorAll('.draggable'));
+            const container = document.getElementById('draggable-items');
+            items.sort(() => Math.random() - 0.5).forEach(item => container.appendChild(item));
+            
+            // Add touch event listeners
+            document.querySelectorAll('.draggable').forEach(element => {
+                element.addEventListener('touchstart', handleTouchStart);
+                element.addEventListener('touchmove', handleTouchMove);
+                element.addEventListener('touchend', handleTouchEnd);
+            });
+        });
+    </script>
+</body>
+</html>
